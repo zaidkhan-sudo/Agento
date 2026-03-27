@@ -4,16 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import {
   Rocket,
   Zap,
-  Target,
-  Brain,
-  FileText,
-  Mic,
-  BarChart3,
   ArrowRight,
-  ChevronDown,
-  Play,
-  Sparkles,
-  Search,
   Shield,
   Clock,
   Users,
@@ -22,45 +13,32 @@ import {
 import Link from "next/link";
 import { useRef } from "react";
 import { Component as HeroSection } from "@/components/ui/horizon-hero-section";
-
-const features = [
-  {
-    icon: Search,
-    title: "Scout Agent",
-    description: "Monitors 10+ job boards 24/7, flagging fresh opportunities before the competition.",
-    color: "orange",
-  },
-  {
-    icon: Target,
-    title: "Analyzer Agent",
-    description: "Scores every job on skills fit, culture match, and career trajectory alignment.",
-    color: "amber",
-  },
-  {
-    icon: FileText,
-    title: "Writer Agent",
-    description: "Generates unique, ATS-optimized resumes tailored to each specific role.",
-    color: "emerald",
-  },
-  {
-    icon: Mic,
-    title: "Coach Agent",
-    description: "Simulates real interviews with voice analysis and personalized feedback.",
-    color: "cyan",
-  },
-  {
-    icon: BarChart3,
-    title: "Reporter Agent",
-    description: "Delivers daily intelligence briefings with actionable insights.",
-    color: "rose",
-  },
-];
+import { BentoGridDemo } from "@/components/ui/demo";
+import { BentoGrid, type BentoItem } from "@/components/ui/bento-grid";
 
 const stats = [
   { value: "10+", label: "Job Sources" },
   { value: "24/7", label: "Autonomous Hunting" },
   { value: "73%", label: "Applications Lost" },
   { value: "5", label: "AI Agents" },
+];
+
+const problemItems: BentoItem[] = [
+  {
+    title: "11+ Hours/Week",
+    description: "Wasted on repetitive searching, applying, and tracking",
+    icon: <Clock className="w-4 h-4 text-[var(--color-rose)]" />,
+  },
+  {
+    title: "250+ Applicants",
+    description: "Average competition per job posting online",
+    icon: <Users className="w-4 h-4 text-[var(--color-rose)]" />,
+  },
+  {
+    title: "3% Response Rate",
+    description: "Most applications never get a human review",
+    icon: <TrendingUp className="w-4 h-4 text-[var(--color-rose)]" />,
+  },
 ];
 
 export default function LandingPage() {
@@ -141,44 +119,14 @@ export default function LandingPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Clock,
-                title: "11+ Hours/Week",
-                description: "Wasted on repetitive searching, applying, and tracking",
-              },
-              {
-                icon: Users,
-                title: "250+ Applicants",
-                description: "Average competition per job posting online",
-              },
-              {
-                icon: TrendingUp,
-                title: "3% Response Rate",
-                description: "Most applications never get a human review",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.05 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="glass-card p-8 text-center hover:glow-orange transition-all duration-500"
-              >
-                <div className="mx-auto w-14 h-14 rounded-2xl bg-[var(--color-rose-bg)] flex items-center justify-center mb-5">
-                  <item.icon className="h-7 w-7 text-[var(--color-rose)]" />
-                </div>
-                <h3 className="text-xl font-bold text-[var(--color-text-primary)] mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-[var(--color-text-secondary)]">
-                  {item.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05 }}
+            transition={{ duration: 0.4 }}
+          >
+            <BentoGrid items={problemItems} />
+          </motion.div>
         </div>
       </section>
 
@@ -202,50 +150,14 @@ export default function LandingPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.05 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className={`glass-card p-8 group hover:border-[var(--color-${feature.color})] transition-all duration-500 hover:glow-orange`}
-              >
-                <div className={`w-14 h-14 rounded-2xl bg-[var(--color-${feature.color}-bg)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon className={`h-7 w-7 text-[var(--color-${feature.color})]`} />
-                </div>
-                <h3 className="text-xl font-bold text-[var(--color-text-primary)] mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-[var(--color-text-secondary)] leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-
-            {/* The Loop Card - Special */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-              className="glass-card p-8 md:col-span-2 lg:col-span-1 relative overflow-hidden gradient-border"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[var(--color-orange)]/20 to-transparent blur-2xl" />
-              <div className="relative">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[var(--color-orange)] to-[var(--color-amber)] flex items-center justify-center mb-6">
-                  <Brain className="h-7 w-7 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-[var(--color-text-primary)] mb-3">
-                  The Feedback Loop
-                </h3>
-                <p className="text-[var(--color-text-secondary)] leading-relaxed">
-                  Every rejection teaches. Every callback reinforces. Your agents evolve with real data from your journey.
-                </p>
-              </div>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05 }}
+            transition={{ duration: 0.4 }}
+          >
+            <BentoGridDemo />
+          </motion.div>
         </div>
       </section>
 
