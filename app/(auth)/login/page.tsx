@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Rocket, Github, Loader2, Mail, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { LiquidMetalIconBadge } from "@/components/ui/liquid-metal-button";
+import { InteractiveRobotSpline } from "@/components/ui/interactive-3d-robot";
 import { createClient } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
 
@@ -79,8 +80,8 @@ function LoginForm() {
       {/* Error/Success messages */}
       {(error || message) && (
         <div className={`p-4 rounded-xl text-sm ${error || message?.type === "error"
-            ? "bg-[var(--color-rose-bg)] text-[var(--color-rose)] border border-[var(--color-rose)]/20"
-            : "bg-[var(--color-emerald-bg)] text-[var(--color-emerald)] border border-[var(--color-emerald)]/20"
+            ? "bg-rose-500/10 text-rose-300 border border-rose-300/25"
+            : "bg-emerald-500/10 text-emerald-300 border border-emerald-300/25"
           }`}>
           {error === "auth_failed" ? "Authentication failed. Please try again." : message?.text}
         </div>
@@ -91,7 +92,7 @@ function LoginForm() {
         <button
           onClick={handleGoogleLogin}
           disabled={isLoading !== null}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-card)] px-4 py-3.5 text-sm font-medium text-[var(--color-text-primary)] transition-all hover:border-[var(--color-orange-border)] hover:bg-[var(--color-bg-card-hover)] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex w-full items-center justify-center gap-3 rounded-xl border border-zinc-600/70 bg-zinc-950/80 px-4 py-3.5 text-sm font-medium text-[var(--color-text-primary)] transition-all hover:border-purple-500/50 hover:bg-zinc-900/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading === "google" ? (
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -121,7 +122,7 @@ function LoginForm() {
         <button
           onClick={handleGithubLogin}
           disabled={isLoading !== null}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-card)] px-4 py-3.5 text-sm font-medium text-[var(--color-text-primary)] transition-all hover:border-[var(--color-orange-border)] hover:bg-[var(--color-bg-card-hover)] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex w-full items-center justify-center gap-3 rounded-xl border border-zinc-600/70 bg-zinc-950/80 px-4 py-3.5 text-sm font-medium text-[var(--color-text-primary)] transition-all hover:border-purple-500/50 hover:bg-zinc-900/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading === "github" ? (
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -148,7 +149,7 @@ function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="name@company.com"
-            className="h-12 w-full rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-input)] pl-12 pr-4 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] transition-all focus:border-[var(--color-orange)] focus:outline-none focus:ring-2 focus:ring-[var(--color-orange)]/20"
+            className="h-12 w-full rounded-xl border border-zinc-600/70 bg-zinc-950/80 pl-12 pr-4 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] transition-all focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
           />
         </div>
         <button
@@ -187,102 +188,134 @@ function LoginFormSkeleton() {
 }
 
 export default function LoginPage() {
+  const ROBOT_SCENE_URL = "https://prod.spline.design/PyzDhpQ9E5f1E3MT/scene.splinecode";
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg-primary)] relative overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden bg-black">
       {/* Background effects */}
-      <div className="absolute inset-0 grid-pattern opacity-30" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-br from-[var(--color-orange)]/20 to-transparent rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-[var(--color-amber)]/10 to-transparent rounded-full blur-3xl" />
+      <div className="absolute inset-0 grid-pattern opacity-20" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full max-w-md space-y-8 px-6"
-      >
-        {/* Back to home */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to home
-        </Link>
-
-        {/* Logo */}
-        <div className="text-center">
+      <div className="relative z-10 grid min-h-screen grid-cols-1 lg:grid-cols-2">
+        <div className="flex min-h-screen items-center justify-center px-6 py-10 lg:order-1">
           <motion.div
-            className="relative mx-auto"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full max-w-md space-y-8"
           >
-            <div className="absolute inset-0 mx-auto w-20 h-20 bg-white/20 rounded-2xl blur-2xl opacity-35" />
-            <div className="relative mx-auto w-fit">
-              <LiquidMetalIconBadge icon={<Rocket className="h-9 w-9 transform -rotate-45" />} size={80} />
+            {/* Back to home */}
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-sm text-zinc-300 transition-colors hover:text-purple-500"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to home
+            </Link>
+
+            {/* Logo */}
+            <div className="text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45 }}
+                className="mb-5 inline-flex items-center justify-center rounded-full border border-zinc-600/70 bg-zinc-900/60 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-purple-500/90"
+              >
+                Auth Portal
+              </motion.div>
+              <motion.div
+                className="relative mx-auto"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <div className="absolute inset-0 mx-auto h-20 w-20 rounded-2xl bg-white/20 opacity-35 blur-2xl" />
+                <div className="relative mx-auto w-fit">
+                  <LiquidMetalIconBadge icon={<Rocket className="h-9 w-9 -rotate-45 transform" />} size={80} />
+                </div>
+              </motion.div>
+              <motion.h1
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mt-6 text-4xl font-extrabold text-[var(--color-text-primary)] heading-glow font-[family-name:var(--font-display)]"
+              >
+                Career<span className="text-purple-500">Pilot</span>
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="mt-2 text-[var(--color-text-secondary)]"
+              >
+                Your AI-powered job-hunting teammate
+              </motion.p>
             </div>
+
+            {/* Auth card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="relative space-y-5 rounded-[var(--radius-lg)] border border-zinc-500/55 bg-zinc-800/35 p-8 shadow-[0_0_38px_rgba(255,255,255,0.12)] backdrop-blur-2xl"
+            >
+              <div className="text-center">
+                <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
+                  Welcome <span className="text-purple-500">Back</span>
+                </h2>
+                <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+                  Sign in to continue your job hunt
+                </p>
+              </div>
+
+              <Suspense fallback={<LoginFormSkeleton />}>
+                <LoginForm />
+              </Suspense>
+            </motion.div>
+
+            {/* Footer text */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="text-center text-xs text-[var(--color-text-muted)]"
+            >
+              By continuing, you agree to CareerPilot&apos;s{" "}
+              <a href="#" className="text-purple-500 hover:underline">Terms of Service</a> and{" "}
+              <a href="#" className="text-purple-500 hover:underline">Privacy Policy</a>.
+            </motion.p>
+
+            {/* Tagline */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              className="text-center text-sm font-medium text-[var(--color-text-secondary)]"
+            >
+              &ldquo;You sleep. <span className="text-purple-500">CareerPilot hunts.</span>&rdquo;
+            </motion.p>
           </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 text-4xl font-extrabold gradient-text-fire font-[family-name:var(--font-display)]"
-          >
-            CareerPilot
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-2 text-[var(--color-text-secondary)]"
-          >
-            Your AI-powered job-hunting teammate
-          </motion.p>
         </div>
 
-        {/* Auth card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="glass-card glow-orange space-y-5 p-8"
-        >
-          <div className="text-center">
-            <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
-              Welcome Back
-            </h2>
-            <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-              Sign in to continue your job hunt
-            </p>
+        <div className="relative hidden min-h-screen border-l border-zinc-800 lg:block">
+          <InteractiveRobotSpline
+            scene={ROBOT_SCENE_URL}
+            className="absolute inset-0 z-0 filter-[brightness(1.2)_contrast(1.12)_saturate(1.1)]"
+          />
+
+          <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-t from-black/55 via-black/15 to-black/45" />
+          <div className="pointer-events-none absolute inset-0 z-15 bg-radial-[at_50%_40%] from-white/14 via-transparent to-transparent mix-blend-screen" />
+          <div className="pointer-events-none absolute inset-0 z-20 flex items-start justify-center px-8 pt-24">
+            <div className="max-w-2xl text-center text-white drop-shadow-lg">
+              <h2 className="text-3xl font-bold lg:text-4xl">
+                This is interactive 3d robot <span className="text-purple-500">Whobee</span>
+              </h2>
+              <p className="mt-4 text-zinc-200">
+                Whobee helps you practice interviews, sharpen your profile, and navigate every step of your job hunt.
+              </p>
+            </div>
           </div>
-
-          <Suspense fallback={<LoginFormSkeleton />}>
-            <LoginForm />
-          </Suspense>
-        </motion.div>
-
-        {/* Footer text */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="text-center text-xs text-[var(--color-text-muted)]"
-        >
-          By continuing, you agree to CareerPilot&apos;s{" "}
-          <a href="#" className="text-[var(--color-text-primary)] hover:underline">Terms of Service</a> and{" "}
-          <a href="#" className="text-[var(--color-text-primary)] hover:underline">Privacy Policy</a>.
-        </motion.p>
-
-        {/* Tagline */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-          className="text-center text-sm font-medium text-[var(--color-text-secondary)]"
-        >
-          &ldquo;You sleep. <span className="gradient-text-fire">CareerPilot hunts.</span>&rdquo;
-        </motion.p>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 }
